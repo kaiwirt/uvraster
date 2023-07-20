@@ -1,0 +1,97 @@
+MAP
+
+    UNITS METERS
+
+    PROJECTION
+        "init=epsg:4326"
+    END
+    OUTPUTFORMAT
+      NAME "png"
+      DRIVER AGG/PNG
+      MIMETYPE "image/png"
+      IMAGEMODE RGB
+      EXTENSION "png"
+      TRANSPARENT on
+    END
+    SYMBOL
+         NAME "horizline"
+         TYPE VECTOR
+         POINTS
+           0 0
+           1 0
+         END # points
+    END # symbol
+    SYMBOL
+         NAME "arrowhead"
+         TYPE vector
+         FILLED true
+         #ANCHORPOINT 0 0.5
+         POINTS
+           0 2
+           4 1
+           0 0
+         END # points
+    END # symbol
+    SYMBOL
+         NAME "arrowtail"
+         TYPE vector
+         FILLED true
+         ANCHORPOINT 1 0.5 # to shift the arrowtail
+         POINTS
+           0 2
+           4 1
+           0 0
+           -99 -99
+           0 1
+           4 1
+         END # points
+    END # symbol
+
+    LAYER
+        NAME "uv"
+        TYPE POINT
+        STATUS ON
+        CONNECTIONTYPE uvraster
+        DATA "/config/uv.grib"
+       
+        PROCESSING "UV_SPACING=40"
+        PROCESSING "UV_SIZE_SCALE=4"
+        PROCESSING "BANDS=1,2"
+        
+        PROJECTION
+           AUTO
+        END
+
+        METADATA
+            "ows_enable_request"   "*"
+            "wms_srs" "EPSG:4326 EPSG:3857"
+            "wms_title"         "WIND DWD"
+            "wms_description"   "WIND Layer"
+        END
+
+        CLASS
+          STYLE
+             SYMBOL "horizline"
+             ANGLE [uv_angle]
+             SIZE [uv_length]
+             WIDTH 3
+             COLOR 255 0 0
+          END # style
+          STYLE
+             SYMBOL "arrowhead"
+             ANGLE [uv_angle]
+             SIZE 10
+             COLOR 255 0 0
+             POLAROFFSET [uv_length_2] [uv_angle]
+          END # style
+          STYLE
+             SYMBOL "arrowtail"
+             ANGLE [uv_angle]
+             SIZE 10
+             COLOR 255 0 0
+             POLAROFFSET [uv_length_2] [uv_minus_angle]
+          END # style
+        END # class
+     END
+
+END #end map file
